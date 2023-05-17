@@ -13,6 +13,7 @@ class Camera:
         self.cam_sets_file_name = file_name
         self.cap = cv2.VideoCapture(self.RTSP_URL, cv2.CAP_FFMPEG)
         self.points_rv_tv = Config.POINTS
+        self.zero_dist_coefs = np.zeros((4, 1))
 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
@@ -20,6 +21,13 @@ class Camera:
         params = open(self.cam_sets_file_name, 'rb')
         self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs = pickle.load(params)
         params.close()
+
+
+        # Инициализация кольца
+        self.radius = Config.RAD
+        self.num_points = Config.NUM_POINTS
+        self.theta = np.linspace(0, 2 * np.pi, self.num_points)
+
 
     def get_std_frame(self):
         ret, self.std_frame = self.cap.read()
@@ -93,32 +101,23 @@ class Camera:
             print("tvecs : \n")
             print(self.tvecs)
 
+
     def get_new_Rvec_Tvec(self):
         self.points_rv_tv = Config.POINTS #Количество точек как атрибут класса - чтобы иметь к ней доступ из любой функции
         cv2.namedWindow('LiveCam')
-        dist_coefs = np.zeros((4, 1))
-
         arr3d = np.array([[[0, 0, 0],
                            [9, 0, 0],
+                           [9, 0, 1],
                            [9, 7, 0],
-                           [0, 7, 0]]], dtype=float)
+                           [0, 7, 0],
+                           [0, 7, 1]]], dtype=float)
         arr2d = np.zeros((self.points_rv_tv, 2))
-        arr_ustiq = np.array([[[0, 0, 0]]], dtype=float)
-        arr_test = np.array([[[6, 6, 0]]], dtype=float)  # массив для теста работы функции
-
-        print("dist : \n")
-        print(self.dist_coefs)
-        print("rvecs : \n")
-        print(self.rvecs)
-        print("tvecs : \n")
-        print(self.tvecs)
 
         def MouseClkHandler(event, x, y, flags, param):
             if event == cv2.EVENT_LBUTTONDOWN:
                 arr2d[-self.points_rv_tv] = [x, y]
                 self.points_rv_tv -= 1
                 print(x, y)
-
 
         cv2.setMouseCallback('LiveCam', MouseClkHandler)
 
@@ -131,51 +130,23 @@ class Camera:
                 break
 
         cv2.destroyAllWindows()
-        print("We have enough")
 
-        # print(arr3d.shape)
-        # print(arr3d.dtype)
-        # print(arr2d.shape)
-        # print(arr2d.dtype)
+        _, self.main_rvec, self.main_tvec = cv2.solvePnP(arr3d, arr2d, self.camera_matrix, self.zero_dist_coefs)
 
-        _, rvec, tvec = cv2.solvePnP(arr3d, arr2d, self.camera_matrix, dist_coefs)
-        print(rvec)
-        print(tvec)
 
-        points_to_substract, _ = cv2.projectPoints(arr_ustiq, rvec, tvec, self.camera_matrix, dist_coefs)
-        x_sub, y_sub = points_to_substract[0][0]
+    def draw_circle(self, frame, center_x, center_y, center_z):
 
-        print(x_sub)
-        print(y_sub)
-
-        # point, _ = cv2.projectPoints(arr_test, rvec, tvec, self.camera_matrix, dist_coefs)
-        # xx, yy = point[0][0]
-        xx, yy, zz = arr_test[0][0]
-
-        test_frame = self.get_undist_frame()
-
-        # Создание кольца в 3D координатах
-        radius = 1.5  # Радиус кольца
-        thickness = 0.5  # Толщина кольца
-        num_points = 20  # Количество точек на кольце
-
-        theta = np.linspace(0, 2 * np.pi, num_points)
-        x = radius * np.cos(theta) + xx
-        y = radius * np.sin(theta) + yy
-        z = np.zeros_like(x)  # Все точки лежат на плоскости z = 0
+        x = self.radius * np.cos(self.theta) + center_x
+        y = self.radius * np.sin(self.theta) + center_y
+        # z = np.zeros_like(x)  # Все точки лежат на плоскости z = 0
+        z = np.zeros_like(x) + center_z
 
         # Перевод 3D координат в формат OpenCV
         points_3d = np.vstack((x, y, z)).T
         points_3d = np.expand_dims(points_3d, axis=1)
 
-        points_2d, _ = cv2.projectPoints(points_3d, rvec, tvec, self.camera_matrix, dist_coefs)
+        points_2d, _ = cv2.projectPoints(points_3d, self.main_rvec, self.main_tvec, self.camera_matrix, self.zero_dist_coefs)
 
-        while True:
-            test_frame = self.get_undist_frame()
-            for point in points_2d:
-                x, y = point.ravel()
-                cv2.circle(test_frame, (int(x), int(y)), 3, (0, 0, 255), -1)
-
-
-            cv2.imshow('Coords', test_frame)
-            cv2.waitKey(1)
+        for point in points_2d:
+            x, y = point.ravel()
+            cv2.circle(frame, (int(x), int(y)), 3, (0, 0, 255), -1)
