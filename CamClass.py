@@ -18,9 +18,14 @@ class Camera:
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
 
-
-        with open(self.cam_sets_file_name, 'rb') as params:
-            self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs = pickle.load(params)
+        try:
+            params = open(self.cam_sets_file_name, 'rb')
+            self.main_rvec, self.main_tvec, self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs = pickle.load(params)
+            params.close()
+        except:
+            # self.calibration()
+            self.get_new_rvec_tvec()
+            self.store_new_settings()
 
 
         # Инициализация кольца
@@ -42,6 +47,13 @@ class Camera:
     def get_undist_frame(self):
         self.fixed_frame = cv2.remap(self.get_std_frame(), self.mapx, self.mapy, cv2.INTER_LINEAR)
         return self.fixed_frame
+
+
+    def store_new_settings(self):
+        with open(self.cam_sets_file_name, 'wb') as params:  # Записываем значения параметров в файл
+            list_of_parameters = [self.main_rvec, self.main_tvec, self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs]
+            pickle.dump(list_of_parameters, params)
+
 
     def calibration(self, more_info=0):
         shots = Config.NUMBER_OF_SHOTS
@@ -81,10 +93,7 @@ class Camera:
                                                                                                gray.shape[::-1], None,
                                                                                                None)
         self.mapx, self.mapy = cv2.initUndistortRectifyMap(self.camera_matrix, self.dist_coefs, None, None, (w, h), 5)
-
-        list_of_parameters = [self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs]
-        with open(self.cam_sets_file_name, 'wb') as params:  # Записываем значения параметров в файл
-            pickle.dump(list_of_parameters, params)
+        self.store_new_settings()
 
         if more_info:
             print("Camera matrix:\n", self.camera_matrix)
@@ -121,8 +130,10 @@ class Camera:
                 break
 
         cv2.destroyAllWindows()
+        ret, self.main_rvec, self.main_tvec = cv2.solvePnP(arr3d, arr2d, self.camera_matrix, self.zero_dist_coefs)
+        if ret:
+            self.store_new_settings()
 
-        _, self.main_rvec, self.main_tvec = cv2.solvePnP(arr3d, arr2d, self.camera_matrix, self.zero_dist_coefs)
 
     def draw_circle(self, frame, center_x, center_y, center_z):
         radius = self.radius
