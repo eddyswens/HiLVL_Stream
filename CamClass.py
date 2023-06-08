@@ -25,8 +25,7 @@ class Camera:
         except:
             # self.calibration()
             self.get_new_rvec_tvec()
-            self.store_new_settings()
-
+            self.storage_new_settings()
 
         # Инициализация кольца
         self.radius = Config.RAD
@@ -49,51 +48,52 @@ class Camera:
         return self.fixed_frame
 
 
-    def store_new_settings(self):
+    def storage_new_settings(self):
         with open(self.cam_sets_file_name, 'wb') as params:  # Записываем значения параметров в файл
             list_of_parameters = [self.main_rvec, self.main_tvec, self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs]
             pickle.dump(list_of_parameters, params)
 
 
-    def calibration(self, more_info=0):
+    def calibration(self, imgpoints=None, more_info=0):
         shots = Config.NUMBER_OF_SHOTS
         board_size = Config.BOARD_SIZE  # Определение размеров шахматной доски
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         objpoints = []  # Создание вектора для хранения векторов трехмерных точек для каждого изображения шахматной доски
-        imgpoints = []  # Создание вектора для хранения векторов 2D точек для каждого изображения шахматной доски
         objp = np.zeros((1, board_size[0] * board_size[1], 3), np.float32)  # Определение мировых координат для 3D точек
         objp[0, :, :2] = np.mgrid[0:board_size[0], 0:board_size[1]].T.reshape(-1, 2)
         gray = None
 
-        while shots:
-            frame = self.get_std_frame().copy()
-            cv2.imshow("Calibration frame", frame)
+        if not imgpoints:
+            imgpoints = []  # Создание вектора для хранения векторов 2D точек для каждого изображения шахматной доски
+            while shots:
+                frame = self.get_std_frame().copy()
+                cv2.imshow("Calibration frame", frame)
 
-            if cv2.waitKey(1) & 0xFF == ord('p'):
-                if gray is None:
-                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                if cv2.waitKey(1) & 0xFF == ord('p'):
+                    if gray is None:
+                        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-                ret, corners = cv2.findChessboardCorners(gray, board_size,
-                                                         cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
+                    ret, corners = cv2.findChessboardCorners(gray, board_size,
+                                                             cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
 
-                if ret:
-                    shots -= 1
-                    objpoints.append(objp)
-                    corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)  # Уточнение положений углов
-                    imgpoints.append(corners2)
-                    frame = cv2.drawChessboardCorners(frame, board_size, corners2, ret)
-                    cv2.imshow('frame', frame)
-                    cv2.waitKey(1000)
-                    cv2.destroyWindow('frame')
+                    if ret:
+                        shots -= 1
+                        objpoints.append(objp)
+                        corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)  # Уточнение положений углов
+                        imgpoints.append(corners2)
+                        frame = cv2.drawChessboardCorners(frame, board_size, corners2, ret)
+                        cv2.imshow('frame', frame)
+                        cv2.waitKey(1000)
+                        cv2.destroyWindow('frame')
 
-        h, w = frame.shape[:2]
-        cv2.destroyAllWindows()
+            h, w = frame.shape[:2]
+            cv2.destroyAllWindows()
 
         ret, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                                                                gray.shape[::-1], None,
                                                                                                None)
         self.mapx, self.mapy = cv2.initUndistortRectifyMap(self.camera_matrix, self.dist_coefs, None, None, (w, h), 5)
-        self.store_new_settings()
+        self.storage_new_settings()
 
         if more_info:
             print("Camera matrix:\n", self.camera_matrix)
@@ -132,10 +132,10 @@ class Camera:
         cv2.destroyAllWindows()
         ret, self.main_rvec, self.main_tvec = cv2.solvePnP(arr3d, arr2d, self.camera_matrix, self.zero_dist_coefs)
         if ret:
-            self.store_new_settings()
+            self.storage_new_settings()
 
 
-    def draw_circle(self, frame, center_x, center_y, center_z):
+    def draw_circle(self, center_x, center_y, center_z, draw=0, frame=None):
         radius = self.radius
         theta = self.theta
 
@@ -146,7 +146,13 @@ class Camera:
         points_3d = np.column_stack((x, y, z))
         points_2d, _ = cv2.projectPoints(points_3d, self.main_rvec, self.main_tvec, self.camera_matrix,
                                          self.zero_dist_coefs)
+        circle_points = []
 
         for point in points_2d:
             x, y = point.ravel()
-            cv2.circle(frame, (int(x), int(y)), 3, (0, 0, 255), -1)
+            if draw:
+                cv2.circle(frame, (int(x), int(y)), 3, (0, 0, 255), -1)
+
+            circle_points.append([x, y])
+        return circle_points
+

@@ -1,0 +1,521 @@
+{
+    "polygon_info": {
+        "0": {
+            "current_pos": [
+                -0.7,
+                -2.55,
+                0
+            ],
+            "name_role": "Fabric_RolePolygon",
+            "role_data": {
+                "current_cargo_color": [
+                    0,
+                    0,
+                    255
+                ],
+                "current_conditions": 1,
+                "is_cargo": true
+            }
+        },
+        "1": {
+            "current_pos": [
+                0.37,
+                -0.49,
+                0
+            ],
+            "name_role": "Fabric_RolePolygon",
+            "role_data": {
+                "current_cargo_color": [
+                    255,
+                    0,
+                    0
+                ],
+                "current_conditions": 1,
+                "is_cargo": true
+            }
+        },
+        "10": {
+            "current_pos": [
+                4.35,
+                -2.75,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "11": {
+            "current_pos": [
+                4.35,
+                -1.91,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "12": {
+            "current_pos": [
+                4.35,
+                1.83,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "13": {
+            "current_pos": [
+                4.35,
+                2.63,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "14": {
+            "current_pos": [
+                [
+                    -6,
+                    -6
+                ],
+                [
+                    -3,
+                    -6
+                ],
+                [
+                    -3,
+                    6
+                ],
+                [
+                    -6,
+                    6
+                ]
+            ],
+            "name_role": "RectArea_RolePolygon",
+            "role_data": null
+        },
+        "15": {
+            "current_pos": [
+                [
+                    3,
+                    -6
+                ],
+                [
+                    6,
+                    -6
+                ],
+                [
+                    6,
+                    6
+                ],
+                [
+                    3,
+                    6
+                ]
+            ],
+            "name_role": "RectArea_RolePolygon",
+            "role_data": null
+        },
+        "2": {
+            "current_pos": [
+                -0.76,
+                1.58,
+                0
+            ],
+            "name_role": "Fabric_RolePolygon",
+            "role_data": {
+                "current_cargo_color": [
+                    0,
+                    255,
+                    0
+                ],
+                "current_conditions": 1,
+                "is_cargo": true
+            }
+        },
+        "3": {
+            "current_pos": [
+                0.24,
+                3.54,
+                0
+            ],
+            "name_role": "Fabric_RolePolygon",
+            "role_data": {
+                "current_cargo_color": [
+                    0,
+                    0,
+                    255
+                ],
+                "current_conditions": 1,
+                "is_cargo": true
+            }
+        },
+        "4": {
+            "current_pos": [
+                -4.3,
+                -2.96,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "5": {
+            "current_pos": [
+                -4.3,
+                -2.072,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "6": {
+            "current_pos": [
+                -4.35,
+                1.82,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "7": {
+            "current_pos": [
+                -4.35,
+                2.59,
+                0
+            ],
+            "name_role": "TakeoffArea_RolePolygon",
+            "role_data": {}
+        },
+        "8": {
+            "current_pos": [
+                -4.41,
+                -0.074,
+                0
+            ],
+            "name_role": "Weapoint2_RolePolygon",
+            "role_data": {
+                "current_cargo_color": [
+                    0,
+                    0,
+                    0
+                ],
+                "current_conditions": 1,
+                "is_cargo": true
+            }
+        },
+        "9": {
+            "current_pos": [
+                4.31,
+                0.061,
+                0
+            ],
+            "name_role": "Weapoint2_RolePolygon",
+            "role_data": {
+                "current_cargo_color": [
+                    0,
+                    0,
+                    0
+                ],
+                "current_conditions": 1,
+                "is_cargo": true
+            }
+        }
+    },
+    "server_info": {
+        "gameTime": "09:02",
+        "state": 15,
+        "version": "1.1.0"
+    },
+    "team_info": {
+        "Blue": {
+            "balls_team": 0,
+            "name_team": "Blue",
+            "players": {
+                "0": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        2.752269326903082,
+                        4.1152900606697544,
+                        0,
+                        -3.089060977187494
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "1": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        1.5500800344459016,
+                        -3.0195335171174107,
+                        0,
+                        -3.0503052295841258
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio1",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "2": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        1.0522306383686142,
+                        -1.9532356516448728,
+                        0,
+                        0.44209511056344947
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio2",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "3": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        -1.4509249291417785,
+                        -4.360030211050281,
+                        0,
+                        2.1975534469380857
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio3",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "4": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        1.666102687797393,
+                        3.9304411385369713,
+                        0,
+                        2.962850396087487
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio3",
+                    "name_role": "EmptyRole",
+                    "repair": false
+                }
+            }
+        },
+        "Red": {
+            "balls_team": 0,
+            "name_team": "Red",
+            "players": {
+                "5": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        -4.225,
+                        2.004,
+                        0.048,
+                        -1.359
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "PioneerObject",
+                    "name_player": "QWE",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "6": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        -0.2850391867240094,
+                        -1.7035267903768585,
+                        0,
+                        -2.477369571033336
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "QWE1",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "7": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        2.975208329951887,
+                        4.789823797695093,
+                        0,
+                        2.177613390001285
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio2",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "8": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        2.722021714618574,
+                        4.841618290705517,
+                        0,
+                        2.457684116451664
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio3",
+                    "name_role": "RoboFinist_Role",
+                    "repair": false
+                },
+                "9": {
+                    "balls": 0,
+                    "bullet": 3,
+                    "color_cargo": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_color": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "current_pos": [
+                        -3.9103608630410736,
+                        1.5937217799607408,
+                        0,
+                        -1.636156372555131
+                    ],
+                    "is_blocking": false,
+                    "is_cargo": false,
+                    "is_connected": false,
+                    "is_shooting": false,
+                    "name_object_controll": "TestObject",
+                    "name_player": "Uiopio3",
+                    "name_role": "EmptyRole",
+                    "repair": false
+                }
+            }
+        }
+    }
+}
