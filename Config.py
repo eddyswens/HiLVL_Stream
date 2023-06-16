@@ -10,7 +10,10 @@ POINTS = 6
 RAD = 0.2 # Радиус кольца
 NUM_POINTS = 36 # Количество точек на кольце
 
+
+#DEBUG
 SIMULATION_ENABLE = 1
+CAM_ENABLE = 1
 
 CAM1 = "rtsp://drom:DRom2022@10.10.33.19:554"
 CAM2 = 'rtsp://drom:DRom2022@10.10.33.22:554'
@@ -24,7 +27,7 @@ CamSetsFile = '/home/eddyswens/PycharmProjects/HiLVL_Stream/Camera_Settings.data
 
 URL_GET = 'http://127.0.0.1:4000/?target=get&type_command=player&command=visualization&param=0'
 
-GAME_SERVER_URL = 'http://127.0.0.1:4000/'
+GAME_SERVER_URL = 'https://arena.geoscan.aero/game/'
 ARGS_FOR_GAME_SERVER = {'target': 'get',
                   'type_command': 'player',
                   'command': 'visualization',

@@ -39,7 +39,7 @@ else:
 
 
     class DroneConnectingData:
-        drone0: IpPort = IpPort(ip="10.10.33.62", port=5656)
+        drone0: IpPort = IpPort(ip="10.10.33.48", port=5656)
 
     drone = Pioneer(ip=DroneConnectingData.drone0.ip, mavlink_port=DroneConnectingData.drone0.port, logger=False)
     prev_pos = [0, 0, 0]
@@ -55,6 +55,6 @@ else:
             return prev_pos
 
 
-    if __name__ == '__main__':
-        while True:
-            print(get_pos())
+if __name__ == '__main__':
+    while True:
+        print(get_pos())

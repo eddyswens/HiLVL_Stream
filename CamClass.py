@@ -11,7 +11,14 @@ class Camera:
         self.height = height
         self.width = width
         self.cam_sets_file_name = file_name
-        self.cap = cv2.VideoCapture(self.RTSP_URL, cv2.CAP_FFMPEG) # cv2.CAP_FFMPEG
+
+        if Config.CAM_ENABLE:
+            try:
+                self.cap = cv2.VideoCapture(self.RTSP_URL, cv2.CAP_FFMPEG) # cv2.CAP_FFMPEG
+            except:
+                self.cap = np.zeros((512,512,3), np.uint8)
+
+
         self.points_rv_tv = Config.POINTS
         self.zero_dist_coefs = np.zeros((4, 1))
 
@@ -101,38 +108,42 @@ class Camera:
             print("rvecs:\n", self.rvecs)
             print("tvecs:\n", self.tvecs)
 
-    def get_new_rvec_tvec(self):
+    def get_new_rvec_tvec(self, arr2d=None):
         self.points_rv_tv = Config.POINTS
-        cv2.namedWindow('LiveCam')
-        arr3d = np.array([[[1.019, -1.370, 0],
-                           [-1.430, -1.419, 0],
-                           [-1.478, 1.214, 0],
-                           [1.345, 1.277, 0],
-                           [2.675, -0.032, 1],
-                           [-2.1, -0.158, 1]
+
+        arr3d = np.array([[[-0.151, -0.237, 0],
+                           [-0.161, 2.300, 0],
+                           [-3.773, -0.337, 0],
+                           [3.133, -0.198, 0],
+                           [5.091, 0.354, 1],
+                           [-3.395, -2.458, 1]
                            ]], dtype=float)
         arr2d = np.zeros((self.points_rv_tv, 2))
 
-        def mouse_click_handler(event, x, y, flags, param):
-            if event == cv2.EVENT_LBUTTONDOWN:
-                arr2d[-self.points_rv_tv] = [x, y]
-                self.points_rv_tv -= 1
-                print(x, y)
+        if arr2d.all() == None:
+            cv2.namedWindow('LiveCam')
+            def mouse_click_handler(event, x, y, flags, param):
+                if event == cv2.EVENT_LBUTTONDOWN:
+                    arr2d[-self.points_rv_tv] = [x, y]
+                    self.points_rv_tv -= 1
+                    print(x, y)
 
-        cv2.setMouseCallback('LiveCam', mouse_click_handler)
+            cv2.setMouseCallback('LiveCam', mouse_click_handler)
 
-        while self.points_rv_tv:
-            frame = self.get_undist_frame()
-            cv2.imshow('LiveCam', frame)
+            while self.points_rv_tv:
+                frame = self.get_undist_frame()
+                cv2.imshow('LiveCam', frame)
 
-            if cv2.waitKey(1) & 0xFF == ord('x'):
-                cv2.destroyAllWindows()
-                break
+                if cv2.waitKey(1) & 0xFF == ord('x'):
+                    cv2.destroyAllWindows()
+                    break
+            cv2.destroyAllWindows()
 
-        cv2.destroyAllWindows()
         ret, self.main_rvec, self.main_tvec = cv2.solvePnP(arr3d, arr2d, self.camera_matrix, self.zero_dist_coefs)
         if ret:
             self.storage_new_settings()
+            return True
+        return False
 
 
     def draw_circle(self, center_x, center_y, center_z, draw=0, frame=None):
