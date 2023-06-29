@@ -16,21 +16,19 @@ class Camera:
             try:
                 self.cap = cv2.VideoCapture(self.RTSP_URL, cv2.CAP_FFMPEG) # cv2.CAP_FFMPEG
             except:
-                self.cap = np.zeros((512,512,3), np.uint8)
+                print("failed to grab frame")
 
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
 
         self.points_rv_tv = Config.POINTS
         self.zero_dist_coefs = np.zeros((4, 1))
-
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
 
         try:
             params = open(self.cam_sets_file_name, 'rb')
             self.main_rvec, self.main_tvec, self.mapx, self.mapy, self.camera_matrix, self.dist_coefs, self.rvecs, self.tvecs = pickle.load(params)
             params.close()
         except:
-            # self.calibration()
             self.get_new_rvec_tvec()
             self.storage_new_settings()
 
@@ -39,20 +37,17 @@ class Camera:
         self.num_points = Config.NUM_POINTS
         self.theta = np.linspace(0, 2 * np.pi, self.num_points)
 
-
-    def get_std_frame(self):
-        ret, self.std_frame = self.cap.read()
-
-        if not ret:
-            print("failed to grab frame")
-            return None
-
-        return self.std_frame
+    if Config.CAM_ENABLE:
+        def get_std_frame(self):
+            if Config.CAM_ENABLE:
+                ret, self.std_frame = self.cap.read()
+                if ret:
+                    return self.std_frame
 
 
-    def get_undist_frame(self):
-        self.fixed_frame = cv2.remap(self.get_std_frame(), self.mapx, self.mapy, cv2.INTER_LINEAR)
-        return self.fixed_frame
+        def get_undist_frame(self):
+            self.fixed_frame = cv2.remap(self.get_std_frame(), self.mapx, self.mapy, cv2.INTER_LINEAR)
+            return self.fixed_frame
 
 
     def storage_new_settings(self):
@@ -61,14 +56,16 @@ class Camera:
             pickle.dump(list_of_parameters, params)
 
 
-    def calibration(self, imgpoints=None, more_info=0):
+    def calibration(self, imgpoints=None, more_info=0):  # (Убрать искажения линзы). Только при подключенной камере. Не тестировалась передача imgpoints.
         shots = Config.NUMBER_OF_SHOTS
         board_size = Config.BOARD_SIZE  # Определение размеров шахматной доски
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         objpoints = []  # Создание вектора для хранения векторов трехмерных точек для каждого изображения шахматной доски
         objp = np.zeros((1, board_size[0] * board_size[1], 3), np.float32)  # Определение мировых координат для 3D точек
         objp[0, :, :2] = np.mgrid[0:board_size[0], 0:board_size[1]].T.reshape(-1, 2)
+
         gray = None
+        frame = None
 
         if not imgpoints:
             imgpoints = []  # Создание вектора для хранения векторов 2D точек для каждого изображения шахматной доски
@@ -111,13 +108,7 @@ class Camera:
     def get_new_rvec_tvec(self, arr2d=None):
         self.points_rv_tv = Config.POINTS
 
-        arr3d = np.array([[[-0.151, -0.237, 0],
-                           [-0.161, 2.300, 0],
-                           [-3.773, -0.337, 0],
-                           [3.133, -0.198, 0],
-                           [5.091, 0.354, 1],
-                           [-3.395, -2.458, 1]
-                           ]], dtype=float)
+        arr3d = Config.POINTS_3D
         arr2d = np.zeros((self.points_rv_tv, 2))
 
         if arr2d.all() == None:

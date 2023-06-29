@@ -27,14 +27,14 @@ else:
 # cam1.get_new_rvec_tvec()
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and Config.CAM_ENABLE == 1:
     if Config.SIMULATION_ENABLE:
         main_logger.info("Simulation is active now")
         drone = DroneClass.Drone()
         while True:
             x, y, z = drone.pos[0][0]
             frame = cam1.get_undist_frame()
-            cam1.draw_circle(frame, x, y, z - 0.15)
+            cam1.draw_circle(x, y, z - 0.15, frame=frame)
             cv2.imshow('Test_fly', frame)
 
             if cv2.waitKey(1) & 0xFF == ord('x'):
